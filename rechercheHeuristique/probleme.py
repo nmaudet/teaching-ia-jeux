@@ -250,47 +250,4 @@ def idastar(p,verbose=False):
     
 
             
-###############################################################################
-# Tests
-###############################################################################
-      
-
-'''
-#puzzle1 = randomPuzzle(3)
-#puzzle2 = randomPuzzle(3)
-
-puzzle1 = np.array(([2,1,6,4,0,8,7,5,3]))
-puzzle2 = np.array(([1,2,3,8,0,4,7,6,5]))
-
-
-puzzle1 = np.reshape(puzzle1,(3,3))
-puzzle2 = np.reshape(puzzle2,(3,3))
-
-
-p1 = ProblemeTaquin(puzzle1,puzzle2,'manhattan')
-print "=------------------------------="
-print "Heuristique:",  p1.heuristique
-print "Etat initial:\n", puzzle1
-print "Etat but:\n", puzzle2
-print "=------------------------------="
-print "Solution:\n"
-
-astar(p1)
-#idastar(p1)
-
-
-g = np.array((
-[True,True,True,True,True,True],
-[True,True,False,True,True,True],
-[True,True,False,False,False,True],
-[True,True,True,True,True,True],
-[True,True,False,True,False,False],
-[True,True,False,True,True,True]))
-
-p2 = ProblemeGrid2D((0,2),(5,4),g,'manhattan')
-
-astar(p2,True)
-'''
-
-
 

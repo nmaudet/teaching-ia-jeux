@@ -173,19 +173,7 @@ print "Solution:\n"
 probleme.astar(p1)
 #idastar(p1)
 
-'''
-g = np.array((
-[True,True,True,True,True,True],
-[True,True,False,True,True,True],
-[True,True,False,False,False,True],
-[True,True,True,True,True,True],
-[True,True,False,True,False,False],
-[True,True,False,True,True,True]))
 
-p2 = ProblemeGrid2D((0,2),(5,4),g,'manhattan')
-
-astar(p2,True)
-'''
 
 
 
