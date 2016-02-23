@@ -1,0 +1,16 @@
+quadricouleur,quadricouleur,quadricouleur,quadricouleur,Porte 1,Porte 2,Porte 3,Porte 4,Mur gris 1,Mur gris 2,Mur gris 3,mur gris 4,mur rouge 1,mur rouge 2,mur rouge 3,mur rouge 4
+interrupteur,interrupteur,interrupteur,colonne haut,Portail 1,Portail 2,Portail 3,Portail 4,arbuste 1,sapin,gazon uni  2 HG,gazon uni  2 HD,gazon uni 1 HG,gazon uni  1 HD,gazon uni,gazon pousses 2
+interrupteur,interrupteur,interrupteur,colonne bas,Coffre 1,Coffre 2,Coffre 3,Coffre 4,epinards,bush,gazon uni  2 BG,gazon uni  2 BD,gazon uni  1 BG,gazon uni  1 BD,gazon pousses 1,gazon fleurs
+interrupteur,interrupteur,interrupteur,lit haut,Pot 1,Pot 2,Pot 3,Pot 4,arbuste haut 3,arbuste HG 2,arbuste HD 2,herbe seche uni,herbe seche 2 HG,herbe seche 2 HD,herbe seche 1 HG,herbe seche 1 HD
+interrupteur,interrupteur,interrupteur,lit bas,Parquet 1,Parquet 2,Motte 1,Motte 2,arbuste bas 3,arbuste BG 2,arbuste BD 2,,herbe seche 2 BG,herbe seche 2 BD,herbe seche 1 BG,herbe seche 1 BD
+feu,feu,feu,,,,noir,Lave 1,Lave 2,panneau,antre,,,fond rouge uni,fond rouge HG,fond rouge HD
+feu,feu,feu,,,,rocher brule 1,Rocher 2,Dalles 1,,fauteuil,table,commode,Eau 1,fond rouge BG,fond rouge BD
+feu,feu,feu,,,,Rocher 4,Rocher 3,Dalles 2,escalier montant,escalier descendant,,,Eau 2,Eau 3,Eau 4
+garcon,garcon,garcon,fille,fille,fille,squelette,squelette,squelette,rocs,puit,colonne tronquee,,quatre points,quatre points,quatre points
+garcon,garcon,garcon,fille,fille,fille,squelette,squelette,squelette,or,gemmes,chou,carotte,quatre points,quatre points,quatre points
+garcon,garcon,garcon,fille,fille,fille,squelette,squelette,squelette,Renard 1,Garcon Mort 2,salade,citrouille,quatre points,quatre points,quatre points
+garcon,garcon,garcon,fille,fille,fille,squelette,squelette,squelette,Renard 2,Fille Mort 1,,squelette tombe,quatre points,quatre points,quatre points
+blob,blob,blob,chauve_souris,chauve_souris,chauve_souris,fantome,fantome,fantome,araignee,araignee,araignee,blob mort,flambeau,flambeau,flambeau
+blob,blob,blob,chauve_souris,chauve_souris,chauve_souris,fantome,fantome,fantome,araignee,araignee,araignee,chauve_souris mort,flambeau,flambeau,flambeau
+blob,blob,blob,chauve_souris,chauve_souris,chauve_souris,fantome,fantome,fantome,araignee,araignee,araignee,fantome mort,flambeau,flambeau,flambeau
+blob,blob,blob,chauve_souris,chauve_souris,chauve_souris,fantome,fantome,fantome,araignee,araignee,araignee,araignee mort,flambeau,flambeau,flambeau
