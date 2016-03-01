@@ -1,7 +1,7 @@
 import pygame
 from math import pi,sqrt,cos,sin,floor
 import polygons
-
+import copy
 
 class RecursiveDrawGroup(pygame.sprite.Group):
     """ Standard pygame.sprite.Group classes draw sprites by calling 'blit' on sprite images.
@@ -130,6 +130,9 @@ class MovingSprite(MySprite):
     def get_centroid(self):
         #print "x=",self.x," , w=",self.rect.w
         return self.x+self.rect.w//2,self.y+self.rect.h//2
+
+    def rotate(self,deg):
+        self.translate_sprite(0,0, deg ,relative=True)
 
     def forward(self,t):
         dx,dy = cos(self.angle_degree * pi/180), sin(self.angle_degree * pi/180)

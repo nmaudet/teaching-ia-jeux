@@ -78,22 +78,27 @@ class SpriteBuilder(object):
 
             for idx,e in enumerate(dat):
                 y,x = (idx // self.rowsize)*self.spritesize , (idx % self.rowsize)*self.spritesize
+                #if (e > 0 and  64<=x<=200 and 64<=y<=200) or (layername=='joueur' and e > 0):
                 if e > 0:
                     s = self.basicSpriteFactory( layername , self.sheet.get_row_col(e-1) , x,y , self.sheet[e-1])
                     Grps[layername].add(s)
         return Grps
 
     ##########  Methodes a surcharger pour adapter la classe ##########
+    def basicPlayerFactory(self,tileid=None,x=0.0,y=0.0,img=None):
+            assert not img is None
+            return Player("joueur",tileid,x,y,[img])
+
     def basicSpriteFactory(self , layername,tileid,x,y,img=None):
-        imglist = [self.sheet[tileid]] if img is None else [img]
+        if img is None: img = self.sheet[tileid]
 
         if layername == "joueur":
-            return Player(layername,tileid,x,y,imglist)
+            return self.basicPlayerFactory(tileid,x,y,img)
 
-        elif layername == "ramassable" or layername == "cache":
-            return MovingSprite(layername,tileid,x,y,imglist)
+        elif layername in ["ramassable","cache","personnage"]:
+            return MovingSprite(layername,tileid,x,y,[img])
         else:
-            return MySprite(layername,tileid,x,y,imglist)
+            return MySprite(layername,tileid,x,y,[img])
 
     def basicGroupFactory(self,layername):
         if layername in ["eye_candy","joueur"]:

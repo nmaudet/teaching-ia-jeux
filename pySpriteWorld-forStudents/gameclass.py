@@ -6,6 +6,8 @@ from collections import OrderedDict
 import random
 from sprite import MySprite
 from functools import wraps
+import copy
+import os, sys
 
 try:
     from toolz import first
@@ -28,8 +30,7 @@ def check_init_game_done(fun):
 
 
 class Game(object):
-
-    """ Design Pattern 'Singleton', so only one instance of game can exist """
+    """ Design Pattern 'Singleton', so only one instance of Game can exist """
     single_instance = None
     def __new__(cls, *args, **kwargs):
         if cls.single_instance is None:
@@ -38,7 +39,6 @@ class Game(object):
         return cls.single_instance
 
 
-    """ initialization """
     def __init__(self, fichiercarte=None, _SpriteBuilder=None):
         # if no parameter is given, then __init__ will just create an empty Game object
         if fichiercarte is None or _SpriteBuilder is None:
@@ -57,6 +57,8 @@ class Game(object):
         # cree la fenetre pygame
         self.screen = pygame.display.set_mode([self.spriteBuilder.spritesize * self.spriteBuilder.rowsize,
                                                self.spriteBuilder.spritesize * self.spriteBuilder.colsize])
+
+
         pygame.display.set_caption("pySpriteWorld Experiment")
         self.spriteBuilder.screen = self.screen
 
@@ -101,7 +103,20 @@ class Game(object):
             if layer != "cache":
                 self.layers[layer].draw(self.screen)
 
+
+        if True:#os.environ.get("SDL_VIDEODRIVER") == 'dummy':
+            tempoimg = pygame.Surface([self.screen.get_width(), self.screen.get_height()], pygame.SRCALPHA, 32)
+            pygame.draw.rect(tempoimg, (0,0,0), (0, 0, self.screen.get_width(), self.screen.get_height()), 0)
+
+            tempoimg.blit(self.background, (0, 0), (0, 0, self.screen.get_width(), self.screen.get_height()))
+            for layer in glo.NON_BG_LAYERS:
+                if layer != "cache":
+                    self.layers[layer].draw(tempoimg)
+            pygame.image.save( tempoimg , '/tmp/img.jpg')
+            pygame.image.save( self.player.image , '/tmp/play.jpg' )
+
         pygame.display.flip()
+
 
     def kill_dessinable(self):
         while self.layers['dessinable']:
@@ -116,15 +131,16 @@ class Game(object):
             self.layers['dessinable'].add( MySprite('dessinable',None,0,0,[self.surfaceDessinable]) )
 
     def mainiteration(self, _fps=None, _frameskip = None):
-        if pygame.event.peek():
-            for event in pygame.event.get():  # User did something
-                if event.type == pygame.QUIT:  # If user clicked close
-                    pygame.quit()
-                    quit()
+        if os.environ.get("SDL_VIDEODRIVER") != 'dummy': # if there is a real x-server
+            if pygame.event.peek():
+                for event in pygame.event.get():  # User did something
+                    if event.type == pygame.QUIT:  # If user clicked close
+                        pygame.quit()
+                        quit()
 
-                if event.type == pygame.KEYDOWN:
-                    if event.key in self.callbacks:
-                        self.callbacks[event.key]()
+                    if event.type == pygame.KEYDOWN:
+                        if event.key in self.callbacks:
+                            self.callbacks[event.key]()
 
         self.update()
 
@@ -145,3 +161,46 @@ class Game(object):
         for layer in self.layers.values():
             for s in layer:
                 s.firstname = ontology.firstname(s)
+
+    def begin_add_players(self):
+        """ captures the lock """
+        pass
+
+    def end_add_players(self):
+        """ releases the lock """
+        pass
+
+
+    def add_players(self,xy,player=None,tiled=True,draw_now=True):
+        """
+            Attemps to add one or many new players at position x,y
+            Fails if the new player is colliding something, and then return False
+            if success, then adds the new player to group of players and returns its reference
+            :param xy:  either a tuple (x,y) of coordinates of the new sprite, either an iterable of tuples ((x1,y1),(x2,y2)...)
+            :param player: an existing players or None. If not None, this function will use player.image for the new player
+            :param tiled: if True, then x and y are not in pixel coordinates but tile coordinates
+            :param draw_now: if True, then the main iteration loop is called
+            :return: the list of sprites created successfully
+            :example:
+            >>> # Here, the attempt to create a new sprite fails because of collision
+            >>> game.add_players( (2,3) , game.player )
+            []
+        """
+        assert type(xy) is tuple
+        x,y = xy
+
+        if tiled:
+            x,y = x*self.spriteBuilder.spritesize,y*self.spriteBuilder.spritesize
+
+
+        img  = None if player is None else self.player.image
+        pnew = self.spriteBuilder.basicPlayerFactory(tileid=None,x=x,y=y,img=img)
+
+        if self.mask.handle_pixel_collisions_single_player(self.layers,pnew,_safe_collision=False):
+            self.layers['joueur'].add( pnew )
+            self.mask.draw_sprite( pnew )
+            if draw_now: self.mainiteration()
+            return pnew
+        else:
+            if draw_now: self.mainiteration()
+            return False
