@@ -56,7 +56,7 @@
         {
          "columns":16,
          "firstgid":1,
-         "image":"..\/..\/..\/pySpriteWorld\/SpriteSheet-32x32\/tiny_complete.bmp",
+         "image":"..\/SpriteSheet-32x32\/tiny_complete.bmp",
          "imageheight":832,
          "imagewidth":512,
          "margin":0,
