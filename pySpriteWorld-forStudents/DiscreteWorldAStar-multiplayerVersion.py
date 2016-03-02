@@ -18,47 +18,7 @@ import sys
 
 
 
-
-
-
-
-# ---- ---- ---- ---- ---- ----
-# ---- Misc                ----
-# ---- ---- ---- ---- ---- ----
-
-
-class RobotWorldSpriteBuilder(SpriteBuilder):
-    pass 
-    """ classe permettant d'afficher le personnage sous 4 angles differents
-    """
     
-    '''
-    def basicSpriteFactory(self, layername, tileid, x, y, img=None):
-        if img is None: img = self.sheet[tileid]
-        if layername == "joueur":
-            imglist = [self.sheet[i, j] for i, j in ((10, 0), (8, 0), (9, 0), (11, 0))]
-            p = Player(layername, tileid, x, y, imglist)
-            if tileid[0] in [10, 8, 9, 11]:
-                p.translate_sprite(0, 0, 90 * [10, 8, 9, 11].index(tileid[0]))
-            return p
-        elif layername == "personnage":
-            return MovingSprite(layername, tileid, x, y, [img])
-        else:
-            return SpriteBuilder.basicSpriteFactory(self, layername, tileid, x, y, img)
-            
-    '''            
-
-    '''
-    def basicPlayerFactory(self,tileid=None,x=0.0,y=0.0,img=None):
-            assert not img is None
-            if img is None: img = self.sheet[tileid]
-            return Player("joueur",tileid,x,y,[img])
-    '''
-    
-
-
-
-
 # ---- ---- ---- ---- ---- ----
 # ---- Main                ----
 # ---- ---- ---- ---- ---- ----
@@ -67,8 +27,8 @@ game = Game()
 
 def init(_boardname=None):
     global player,game
-    name = _boardname if _boardname is not None else 'pathfindingWorld_MultiPlayer'
-    game = Game('Cartes/' + name + '.json', RobotWorldSpriteBuilder)
+    name = _boardname if _boardname is not None else 'pathfindingWorld_multiPlayer'
+    game = Game('Cartes/' + name + '.json', SpriteBuilder)
     game.O = Ontology(True, 'SpriteSheet-32x32/tiny_spritesheet_ontology.csv')
     game.populate_sprite_names(game.O)
     game.fps = 5  # frames per second
