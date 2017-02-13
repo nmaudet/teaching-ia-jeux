@@ -39,6 +39,8 @@ class SpriteBuilder(object):
 
         self.spritesize               = self.carte["tilewidth"]
         self.rowsize , self.colsize   = self.carte["width"],self.carte["height"]
+        
+        # print (self.carte["tilesets"][0]["image"])
 
         try:
             sheet_filename  = dirname + "/" + self.carte["tilesets"][0]["image"]

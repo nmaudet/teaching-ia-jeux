@@ -27,12 +27,14 @@ game = Game()
 
 def init(_boardname=None):
     global player,game
-    name = _boardname if _boardname is not None else 'pathfindingWorld_multiPlayer'
+    # pathfindingWorld_MultiPlayer4
+    name = _boardname if _boardname is not None else 'cluedo'
     game = Game('Cartes/' + name + '.json', SpriteBuilder)
     game.O = Ontology(True, 'SpriteSheet-32x32/tiny_spritesheet_ontology.csv')
     game.populate_sprite_names(game.O)
     game.fps = 5  # frames per second
     game.mainiteration()
+    game.mask.allow_overlaping_players = True
     #player = game.player
     
 def main():
@@ -94,7 +96,8 @@ def main():
             x_inc,y_inc = random.choice([(0,1),(0,-1),(1,0),(-1,0)])
             next_row = row+x_inc
             next_col = col+y_inc
-            if ((next_row,next_col) not in wallStates) and ((next_row,next_col) not in posPlayers) and next_row>=0 and next_row<=19 and next_col>=0 and next_col<=19:
+            # and ((next_row,next_col) not in posPlayers)
+            if ((next_row,next_col) not in wallStates) and next_row>=0 and next_row<=19 and next_col>=0 and next_col<=19:
                 players[j].set_rowcol(next_row,next_col)
                 print ("pos :", j, next_row,next_col)
                 game.mainiteration()

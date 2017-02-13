@@ -27,23 +27,6 @@ import sys
 # ---- ---- ---- ---- ---- ----
 
 
-class RobotWorldSpriteBuilder(SpriteBuilder):
-    """ classe permettant d'afficher le personnage sous 4 angles differents
-    """
-    def basicSpriteFactory(self, layername, tileid, x, y, img=None):
-        if img is None: img = self.sheet[tileid]
-        if layername == "joueur":
-            imglist = [self.sheet[i, j] for i, j in ((10, 0), (8, 0), (9, 0), (11, 0))]
-            p = Player(layername, tileid, x, y, imglist)
-            if tileid[0] in [10, 8, 9, 11]:
-                p.translate_sprite(0, 0, 90 * [10, 8, 9, 11].index(tileid[0]))
-            return p
-        elif layername == "personnage":
-            return MovingSprite(layername, tileid, x, y, [img])
-        else:
-            return SpriteBuilder.basicSpriteFactory(self, layername, tileid, x, y, img)
-
-
 
 
 
@@ -58,7 +41,7 @@ game = Game()
 def init(_boardname=None):
     global player,game
     name = _boardname if _boardname is not None else 'pathfindingWorld3'
-    game = Game('Cartes/' + name + '.json', RobotWorldSpriteBuilder)
+    game = Game('Cartes/' + name + '.json', SpriteBuilder)
     game.O = Ontology(True, 'SpriteSheet-32x32/tiny_spritesheet_ontology.csv')
     game.populate_sprite_names(game.O)
     game.fps = 5  # frames per second
@@ -68,7 +51,7 @@ def init(_boardname=None):
 def main():
 
     #for arg in sys.argv:
-    iterations = 500 # default
+    iterations = 100 # default
     if len(sys.argv) == 2:
         iterations = int(sys.argv[1])
     print ("Iterations: ")
@@ -77,18 +60,12 @@ def main():
     init()
     
 
-
-
-
     
     #-------------------------------
     # Building the matrix
     #-------------------------------
        
-       
-       
-    #initStates= []
-    
+           
     # on localise tous les états initiaux (loc du joueur)
     initStates = [o.get_rowcol() for o in game.layers['joueur']]
     print ("Init states:", initStates)
@@ -118,6 +95,7 @@ def main():
     
 
     row,col = initStates[0]
+    #row2,col2 = (5,5)
 
     for i in range(iterations):
     
@@ -127,11 +105,26 @@ def main():
         next_col = col+y_inc
         if ((next_row,next_col) not in wallStates) and next_row>=0 and next_row<=20 and next_col>=0 and next_col<=20:
             player.set_rowcol(next_row,next_col)
-            print ("pos:",next_row,next_col)
+            print ("pos 1:",next_row,next_col)
             game.mainiteration()
 
             col=next_col
             row=next_row
+            
+        '''
+            
+        x2_inc,y2_inc = random.choice([(0,1),(0,-1),(1,0),(-1,0)])
+        next_row2 = row2+x2_inc
+        next_col2 = col2+y2_inc
+        if ((next_row2,next_col2) not in wallStates) and next_row>=0 and next_row<=20 and next_col>=0 and next_col<=20:
+            p2.set_rowcol(next_row2,next_col2)
+            print ("pos 2:",next_row2,next_col2)
+            game.mainiteration()
+
+            col2=next_col2
+            row2=next_row2
+        '''
+
             
         
             
@@ -139,7 +132,7 @@ def main():
         if (row,col)==goalStates[0]:
             o = game.player.ramasse(game.layers)
             game.mainiteration()
-            print ("Objet trouvé!")
+            print ("Objet trouvé!", o)
             break
         '''
         #x,y = game.player.get_pos()
