@@ -28,7 +28,7 @@ game = Game()
 def init(_boardname=None):
     global player,game
     # pathfindingWorld_MultiPlayer4
-    name = _boardname if _boardname is not None else 'match'
+    name = _boardname if _boardname is not None else 'match2'
     game = Game('Cartes/' + name + '.json', SpriteBuilder)
     game.O = Ontology(True, 'SpriteSheet-32x32/tiny_spritesheet_ontology.csv')
     game.populate_sprite_names(game.O)
@@ -40,7 +40,7 @@ def init(_boardname=None):
 def main():
 
     #for arg in sys.argv:
-    iterations = 50 # default
+    iterations = 200 # default
     if len(sys.argv) == 2:
         iterations = int(sys.argv[1])
     print ("Iterations: ")
@@ -59,6 +59,7 @@ def main():
     players = [o for o in game.layers['joueur']]
     nbPlayers = len(players)
     score = [0]*nbPlayers
+    fioles = {} # dictionnaire (x,y)->couleur pour les fioles
     
     
     # on localise tous les états initiaux (loc du joueur)
@@ -67,8 +68,8 @@ def main():
     
     
     # on localise tous les objets ramassables
-    goalStates = [o.get_rowcol() for o in game.layers['ramassable']]
-    print ("Goal states:", goalStates)
+    #goalStates = [o.get_rowcol() for o in game.layers['ramassable']]
+    #print ("Goal states:", goalStates)
         
     # on localise tous les murs
     wallStates = [w.get_rowcol() for w in game.layers['obstacle']]
@@ -78,18 +79,33 @@ def main():
     # Placement aleatoire des fioles de couleur 
     #-------------------------------
     
-    for o in game.layers['ramassable']: # les rouges puis jaunes puis bleues
-    # et on met la fiole qqpart au hasard
+    for o in game.layers['ramassable']: # on considère chaque fiole
+        
+        #on détermine la couleur
+    
+        if o.tileid == (19,0): # tileid donne la coordonnee dans la fiche de sprites
+            couleur = 'r'
+        elif o.tileid == (19,1):
+            couleur = 'j'
+        else:
+            couleur = 'b'
+
+        # et on met la fiole qqpart au hasard
+
         x = random.randint(1,19)
         y = random.randint(1,19)
-        while (x,y) in wallStates:
+
+        while (x,y) in wallStates: # ... mais pas sur un mur
             x = random.randint(1,19)
             y = random.randint(1,19)
         o.set_rowcol(x,y)
+        # on ajoute cette fiole 
+        fioles[(x,y)]=couleur
+
         game.layers['ramassable'].add(o)
         game.mainiteration()                
 
-    print(game.layers['ramassable'])
+    print("Les fioles ont été placées aux endroits suivants: \n", fioles)
 
 
     
@@ -125,29 +141,20 @@ def main():
         
             
             # si on a  trouvé un objet on le ramasse
-            if (row,col) in goalStates:
+            if (row,col) in fioles:
                 o = players[j].ramasse(game.layers)
                 game.mainiteration()
-                print ("Objet trouvé par le joueur ", j)
-                goalStates.remove((row,col)) # on enlève ce goalState de la liste
-                score[j]+=1
+                print ("Objet de couleur ", fioles[(row,col)], " trouvé par le joueur ", j)
+                fioles.pop((row,col))   # on enlève cette fiole de la liste
+                score[j]+=1             # il faudra adapter aux préférences!
                 
-        
-                # et on remet un même objet à un autre endroit
-                x = random.randint(1,19)
-                y = random.randint(1,19)
-                while (x,y) in wallStates:
-                    x = random.randint(1,19)
-                    y = random.randint(1,19)
-                o.set_rowcol(x,y)
-                goalStates.append((x,y)) # on ajoute ce nouveau goalState
-                game.layers['ramassable'].add(o)
-                game.mainiteration()                
+                 
                 
-                break
+                #break
             
     
     print ("scores:", score)
+    print (fioles)
     pygame.quit()
     
         
