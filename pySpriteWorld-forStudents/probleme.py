@@ -166,6 +166,7 @@ def astar(p,verbose=False,stepwise=False):
                 stepwise=False
     
     bestNoeud.trace(p)          
+            
     # Mode verbose            
     # Affichage des statistiques (approximatives) de recherche   
     #
@@ -181,7 +182,7 @@ def astar(p,verbose=False,stepwise=False):
         print ("temps de calcul:", time.time() - startTime)
         print ("=------------------------------=")
 
-    return
+    return bestNoeud
 
 
 ###############################################################################
