@@ -59,7 +59,7 @@ def main():
     players = [o for o in game.layers['joueur']]
     nbPlayers = len(players)
     #score = [0]*nbPlayers
-    fioles = {} # dictionnaire (x,y)->couleur pour les fioles
+    #fioles = {} # dictionnaire (x,y)->couleur pour les fioles
     
     
     # on localise tous les états initiaux (loc du joueur)
@@ -110,7 +110,7 @@ def main():
         x = random.randint(1,19)
         y = random.randint(1,19)
     
-        while (x,y) in tictactoeStates or (x,y) in wallStates or (x,y) in fioles: # ... mais pas sur un mur
+        while (x,y) in tictactoeStates or (x,y) in wallStates: # ... mais pas sur un mur
             x = random.randint(1,19)
             y = random.randint(1,19)
         o.set_rowcol(x,y)
@@ -180,7 +180,6 @@ def main():
                 #break
             
     
-    print (fioles)
     pygame.quit()
     
         
