@@ -38,7 +38,139 @@ def init(_boardname=None):
     game.mainiteration()
     game.mask.allow_overlaping_players = True
     #player = game.player
+
+def ajout_successeurs(state, successeurs,terrains_jeu):
+    (i,j)=state[-1]
+    #si c'est une cas libre
+    for case in terrains_jeu[j]:
+        if case == 0:
+            a=terrains_jeu[j].index(case)
+            successeurs[state].append((a,j))
+    return successeurs
     
+'''   
+# détermine si c'est une position qui va nous faire gagner
+def pos_gagne(state,terrains_jeu,player):
+    i,j=state[-1]
+    morpion=terrain[i]
+    
+    t=False
+    
+    if j==0 :
+    	hoz = morpion[i][1]==player and morpion[i][2]==player
+    	vect = morpion[i][3]==player and morpion[i][6]==player
+    	dig = morpion[i][4]==player and morpion[i][8]==player
+    	
+     if hoz or vect or dig:
+        t=True
+    
+    if j==1 :
+    	hoz = morpion[i][2]==player and morpion[i][0]==player
+    	vect = morpion[i][4]==player and morpion[i][7]==player
+    
+    if hoz or vect:
+        t=True
+       
+    if j==2 :
+    	hoz = morpion[i][1]==player and morpion[i][0]==player
+    	vect = morpion[i][5]==player and morpion[i][8]==player
+    	dig = morpion[i][4]==player and morpion[i][6]==player
+    	
+    	if hoz or vect or dig:
+        t=True
+    	
+    if j==3 :
+    	hoz = morpion[i][4]==player and morpion[i][5]==player
+    	vect = morpion[i][0]==player and morpion[i][6]==player
+    	
+    	if hoz or vect or:
+        t=True
+    
+    if j==4 :
+    	hoz = morpion[i][3]==player and morpion[i][5]==player
+    	vect = morpion[i][1]==player and morpion[i][7]==player
+    	dig = morpion[i][0]==player and morpion[i][8]==player
+    	dig2 = morpion[i][2]==player and morpion[i][6]==player
+    	
+    	if hoz or vect or dig or dig2:
+        t=True
+        
+    if j==5 :
+    	hoz = morpion[i][4]==player and morpion[i][3]==player
+    	vect = morpion[i][2]==player and morpion[i][8]==player
+    	
+    	if hoz or vec:
+        t=True
+    	
+    if j==6 :
+    	hoz = morpion[i][7]==player and morpion[i][8]==player
+    	vect = morpion[i][0]==player and morpion[i][3]==player
+    	dig = morpion[i][4]==player and morpion[i][2]==player
+    	
+    		
+    	if hoz or vec or dig:
+        t=True
+    
+    if j==7 :
+    	hoz = morpion[i][6]==player and morpion[i][8]==player
+    	vect = morpion[i][1]==player and morpion[i][4]==player
+
+    	if hoz or vec:
+        t=True
+    	
+    if j==8 :
+    	hoz = morpion[i][6]==player and morpion[i][7]==player
+    	vect = morpion[i][5]==player and morpion[i][2]==player
+    	dig = morpion[i][4]==player and morpion[i][0]==player
+    	
+    	if hoz or vec or dig:
+        t=True
+   
+   return t
+   '''
+
+def fh(state,j):
+    if pos_gagne(state):
+        nbr_vict_local[j]=nbr_vict_local[j]+1
+        return 1
+    else:
+        return nbr_vict_local[j] 
+ 
+def alphabeta(state):
+    """ implementation de alphabeta, version Russel & Norvig, Chapter 6
+        """
+    v = maxValue(state,-inf,inf)
+    return v
+    
+def maxValue(state,alpha,beta):
+    if feuille(state): # si feuille on renvoie la valeur
+        return valeur[state]
+    v = -inf
+    for s in successeurs[state]:
+        print ("étendu noeud ", s)
+        v = max(v,minValue(s,alpha,beta))
+        if v >= beta: # coupe beta, pas la peine d'étendre les autres fils
+            print ("coupe beta")
+            return v
+        alpha = max(alpha,v) # mise à jour de alpha par MAX
+    return v  
+ 
+def minValue(state,alpha,beta):
+    if feuille(state): # si feuille on renvoie la valeur
+        return valeur[state]
+    v = inf
+    for s in successeurs[state]:
+        print ("étendu noeud ", s)
+        v = min(v,maxValue(s,alpha,beta))
+        if v <= alpha: # coupe alpha, pas la peine d'étendre les autres fils
+            print ("coupe alpha")
+            return v
+        beta = min(beta,v)
+    return v
+   
+def feuille(state): # les feuilles n'apparaissent pas comme clés dans mon dictionnaire successeurs
+    return state not in successeurs  
+   
 def main():
 
     #for arg in sys.argv:
@@ -66,7 +198,7 @@ def main():
        
     players = [o for o in game.layers['joueur']]
     nbPlayers = len(players)
-    score = [0]*nbPlayers
+    scores = [0]*nbPlayers
     #fioles = {} # dictionnaire (x,y)->couleur pour les fioles
     
     
@@ -144,7 +276,7 @@ def main():
         for pos in chemin:
             row = pos[0]
             col = pos[1]
-            player[j].set_rowcol(row, col)
+            player.set_rowcol(row, col)
             
             game.mainiteration()
 
@@ -153,7 +285,7 @@ def main():
         return posPlayer
     
     def update_scores(score, j, morpions, terrains_jeu, terrain):
-        
+        fin = False
         t = terrains_jeu[terrain] # dernier terrain où le joueur a joué 
         v = False
         
@@ -182,6 +314,7 @@ def main():
         if v: # le joueur a gagné le terrain
             morpions[terrain] = j
             v = False
+            score += 1
             
             if terrain in [0, 1, 2] and morpions[0] == morpions[1] == morpions[2]: # 1ère lignée de terrain marquée
                 v = True
@@ -197,23 +330,24 @@ def main():
                 v = True
             
             if v:
-                score += 1
+                fin = True
+               
                 
-        return score, morpions, terrains_jeu
+        return fin, score, morpions, terrains_jeu
    
     #-------------------------------
     # Boucle principale de déplacements, un joueur apres l'autre
     #-------------------------------
     
     posPlayers = initStates
-
+    print(posPlayers)
     tour = 0    
-    j = 0 # le joueur 0 commence
+    j = 1 # le joueur 0 commence
     # on place la premiere fiole jaune      
 
     fiole_a_ramasser = put_next_fiole(0,tour)    
 
-    morpions = [0] * 9 # les 9 terrains de jeu, 0: match non terminé, -1: match nul, 1: joueur 1 a gagné, 2: joueur 2 a gagné
+    morpions = [0] * 9 # les 9 terrains de jeu, 0: match non terminé, 1: joueur 1 a gagné, 2: joueur 2 a gagné
     terrains_jeu = [
                         [0, 0, 0, 0, 0, 0, 0, 0, 0],
                         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -237,87 +371,74 @@ def main():
                      (5,0): (8, 12), (5,1): (8,13) ,(5,2): (8,14), (5,3): (9, 12), (5,4): (9, 13), (5,5): (9, 14), (5,6): (10, 12), (5,7): (10,13),(5,8): (10, 14),
                      (6,0): (12, 4), (6,1): (12,5) ,(6,2): (12,6), (6,3): (13, 4), (6,4): (13, 5), (6,5): (13, 6), (6,6): (14, 4), (6,7): (14,5),(6,8): (14, 6),
                      (7,0): (12, 8), (7,1): (12,9) ,(7,2): (12,10), (7,3): (13, 8), (7,4): (13, 9), (7,5): (13, 10), (7,6): (14, 8), (7,7): (14,9),(7,8): (14, 10),
-                     (8,0): (12, 12), (8,1): (12,13) ,(8,2): (12,14), (8,3): (13, 12), (8,4): (13, 13), (8,5): (13, 14), (8,6): (14, 12), (8,7): (14,13),(9,8): (14, 14),
+                     (8,0): (12, 12), (8,1): (12,13) ,(8,2): (12,14), (8,3): (13, 12), (8,4): (13, 13), (8,5): (13, 14), (8,6): (14, 12), (8,7): (14,13),(8,8): (14, 14)
                     }
     # dictionnaire (terrain, case du terrain) => case dans mat
-   
-   for i in range(iterations):
-        print("Position joueur 0 : ", posPlayers[j])
-        print("Position fiole : ", fiole_a_ramasser)
+    for i in range(iterations):
+       print("Position joueur 0 : ", posPlayers[j])
+       print("Position fiole : ", fiole_a_ramasser)
        
-        p2 = ProblemeGrid2D(posPlayers[j],fiole_a_ramasser,mat,'manhattan')
-        noeudFinal = probleme.astar(p2)
-
-        chemin = get_path(noeudFinal, posPlayers[j])
-        
-       ''' row,col = posPlayers[j]
-
-        for pos in chemin:
-            row = pos[0]
-            col = pos[1]
-            players[j].set_rowcol(row, col)
-            
-           # print ("pos :", j, next_row,next_col)
-            game.mainiteration()
-
-            posPlayers[j]=(row,col)
-        '''
-        posPlayers[j] = go_to_position(posPlayers[j], players[j], chemin)
-        o = players[j].ramasse(game.layers) # on ramasse la fiole 
-        game.mainiteration()
-        print ("Objet de couleur ", couleur(o), " trouvé par le joueur ", j)
-            
-        # ici il faudrait aller la mettre a la position choisie
-        # pour jouer a ultimate tic-tac-toe
-        # et verifier que la position est legale etc.            
-        
-        while true: # tant qu'on tombe sur une case occupée
+       p2 = ProblemeGrid2D(posPlayers[j],fiole_a_ramasser,mat,'manhattan')
+       noeudFinal = probleme.astar(p2)
+       chemin = get_path(noeudFinal, posPlayers[j])
+       posPlayers[j] = go_to_position(posPlayers[j], players[j], chemin)
+       o = players[j].ramasse(game.layers) # on ramasse la fiole 
+       game.mainiteration()
+       print ("Objet de couleur ", couleur(o), " trouvé par le joueur ", j)
+      
+       
+       '''
+       while True: # tant qu'on tombe sur une case occupée
             random_case = random.randint(0,8) # case du terrain où va jouer le joueur  
             if (terrains_jeu[terrain][random_case] == 0): # case libre
                 break
                 
-        pos_but = dict_cases[(terrain, random_case)] # la case où doit aller le personnage
+     '''
+       pos_but = dict_terrains[(terrain, random_case)] # la case où doit aller le personnage
+       p2 = ProblemeGrid2D(posPlayers[j],pos_but,mat,'manhattan')
+       noeudFinal = probleme.astar(p2)
         
-        p2 = ProblemeGrid2D(posPlayers[j],pos_but,mat,'manhattan')
-        noeudFinal = probleme.astar(p2)
+       chemin = get_path(noeudFinal, posPlayers[j])
         
-        chemin = get_path(noeudFinal, posPlayers[j])
-        
-        posPlayers[j] = go_to_position(posPlayers[j], players[j], chemin)
+       posPlayers[j] = go_to_position(posPlayers[j], players[j], chemin)
 
-        players[j].depose(game.layers)
-        game.mainiteration()
-        print("Le joueur ", j, " a déposé sa fiole en ", pos_but)
-        terrains_jeu[terrain][random_case] = j+1 # la case est marquée
+       players[j].depose(game.layers)
+       game.mainiteration()
+       print("Le joueur ", j, " a déposé sa fiole en ", pos_but)
+       terrains_jeu[terrain][random_case] = j+1 # la case est marquée
 
-        scores[j], morpions, terrains_jeu = update_scores(scores[j], j+1, morpions, terrains_jeu, terrain) # maj des scores  
+       fin, scores[j], morpions, terrains_jeu = update_scores(scores[j], j+1, morpions, terrains_jeu, terrain) # maj des scores  
         
+       if fin: # l'un des joueurs à gagner
+           break
         # on active le joueur suivant
         # et on place la fiole suivante
-        j = (j+1)%2     
-        if j == 0:
-            tour+=1
-        
-        fiole_a_ramasser=put_next_fiole(j,tour)    
-        terrain = random_case # prochain terrain
        
-        if not -1 in morpions: # tous les terrains ont été remplis
-            print("Partie terminée")
-            break
         
-        while morpions[terrain] != 0: # terrain déjà gagné par un des deux joueurs
-            terrain = random.randint(0, 8) # choix aléatoire d'un autre terrain
-        
+       fiole_a_ramasser=put_next_fiole(j,tour)    
+       terrain = random_case # prochain terrain
+       
+       if not 0 in morpions: # tous les match sont terminés
+           print("Partie terminée")
+           break
+       game.mainiteration()
+       while morpions[terrain] != 0: # terrain déjà gagné par un des deux joueurs
+           terrain = random.randint(0, 8) # choix aléatoire d'un autre terrain
+
         #break"""
+       j = (j+1)%2     
+       if j == 0:
+           tour+=1
+
     
     print("Scores : ", scores)
     if scores[0] > scores[1]:
-        print("Le joueur 1 a gagné")
+      print("Le joueur 1 a gagné")
     elif scores[0] < scores[1]:
-        print("Le joueur 2 a gagné")
+      print("Le joueur 2 a gagné")
     else:
-        print("Egalité")
-    pygame.quit()
+      print("Egalité")
+    #  pygame.quit()
     
         
 

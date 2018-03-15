@@ -165,7 +165,7 @@ def astar(p,verbose=False,stepwise=False):
             if stop_stepwise=="s":
                 stepwise=False
     
-    bestNoeud.trace(p)          
+  #  bestNoeud.trace(p)          
             
     # Mode verbose            
     # Affichage des statistiques (approximatives) de recherche   
