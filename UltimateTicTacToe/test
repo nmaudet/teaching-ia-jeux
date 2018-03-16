@@ -1,0 +1,16 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Mar 16 00:11:32 2018
+
+@author: lauranguyen
+"""
+
+t = ["coucou"]
+
+def test():
+    t.append("salut")
+
+test()
+print(t)
+print(len((2,3)))
