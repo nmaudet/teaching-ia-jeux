@@ -17,17 +17,9 @@ import numpy as np
 import sys
 
 
-
-
-
-
-
 # ---- ---- ---- ---- ---- ----
 # ---- Misc                ----
 # ---- ---- ---- ---- ---- ----
-
-
-
 
 
 
@@ -110,20 +102,6 @@ def main():
 
             col=next_col
             row=next_row
-            
-        '''
-            
-        x2_inc,y2_inc = random.choice([(0,1),(0,-1),(1,0),(-1,0)])
-        next_row2 = row2+x2_inc
-        next_col2 = col2+y2_inc
-        if ((next_row2,next_col2) not in wallStates) and next_row>=0 and next_row<=20 and next_col>=0 and next_col<=20:
-            p2.set_rowcol(next_row2,next_col2)
-            print ("pos 2:",next_row2,next_col2)
-            game.mainiteration()
-
-            col2=next_col2
-            row2=next_row2
-        '''
 
             
         
