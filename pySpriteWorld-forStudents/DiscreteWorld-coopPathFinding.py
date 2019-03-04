@@ -28,7 +28,7 @@ game = Game()
 def init(_boardname=None):
     global player,game
     # pathfindingWorld_MultiPlayer4
-    name = _boardname if _boardname is not None else 'match'
+    name = _boardname if _boardname is not None else 'pathfindingWorld_MultiPlayer1'
     game = Game('Cartes/' + name + '.json', SpriteBuilder)
     game.O = Ontology(True, 'SpriteSheet-32x32/tiny_spritesheet_ontology.csv')
     game.populate_sprite_names(game.O)
@@ -75,23 +75,12 @@ def main():
     #print ("Wall states:", wallStates)
     
     #-------------------------------
-    # Placement aleatoire des fioles de couleur 
+    # Placement aleatoire des fioles 
     #-------------------------------
     
-    for o in game.layers['ramassable']: # les rouges puis jaunes puis bleues
-    # et on met la fiole qqpart au hasard
-        x = random.randint(1,19)
-        y = random.randint(1,19)
-        while (x,y) in wallStates:
-            x = random.randint(1,19)
-            y = random.randint(1,19)
-        o.set_rowcol(x,y)
-        game.layers['ramassable'].add(o)
-        game.mainiteration()                
-
-    print(game.layers['ramassable'])
-
-
+    
+    # on donne a chaque joueur une fiole a ramasser
+    # en essayant de faire correspondre les couleurs pour que ce soit plus simple à suivre
     
     
     #-------------------------------
