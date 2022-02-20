@@ -14,22 +14,6 @@ import time
 
 
 
-def distManhattan(p1,p2):
-    """ calcule la distance de Manhattan entre le tuple 
-        p1 et le tuple p2
-        """
-    (x1,y1)=p1
-    (x2,y2)=p2
-    return abs(x1-x2)+abs(y1-y2) 
-
-def randomPuzzle(n):
-    """
-    genere un taquin aléatoire de taille n
-    """
-    tiles = np.random.permutation(range(0,n**2)) # 0 is the empty slot
-    puzzle = np.array(tiles)
-    puzzle = np.reshape(puzzle,(n, n))
-    return puzzle
 
 
     
